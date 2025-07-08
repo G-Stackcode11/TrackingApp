@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "985728365133",
+    "project_id": "animaltrackingapp-cd866",
+    "storage_bucket": "animaltrackingapp-cd866.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985728365133:android:7f7e297604479f6353e204",
+        "android_client_info": {
+          "package_name": "com.bmgf.trackingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5JW4VvGvsCDnM-W7DQAZKJXOEPAHJjUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
