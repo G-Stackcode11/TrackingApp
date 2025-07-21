@@ -31,7 +31,7 @@ export default function MetadataForm({ onSubmit }) {
     { name: 'bcs', label: 'Body Condition Score', keyboard: 'numeric' },
     { name: 'remarks', label: 'Remarks' },
     { name: 'stageOfLactation', label: 'Stage of Lactation' },
-    { name: 'dateOfCalving', label: 'Date of Calving (YYYY-MM-DD)' },
+    { name: 'dateOfCalving', label: 'Date of Calving (DD-MM-YYYY)' },
     { name: 'lactationNumber', label: 'Lactation Number', keyboard: 'numeric' },
     { name: 'dob', label: 'Date of Birth (DD-MM-YYYY)' },
   ];

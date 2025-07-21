@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { View, Button, Image, StyleSheet, ScrollView, Alert, PermissionsAndroid, Platform } from 'react-native';
+import {
+  View,
+  Button,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import MetadataForm from '../components/MetadataForm';
-import { saveImageWithMetadata } from '../utils/storage';
-import { uploadImageAndMetadata } from '../utils/firebaseStorage';
+import { saveImageWithMetadata } from '../utils/storage'; // for local storage
+import { uploadImageToFirebase } from '../utils/firebaseStorage'; // for cloud storage
 import { useNavigation } from '@react-navigation/native';
 
 export default function ImageCaptureScreen() {
@@ -13,7 +22,9 @@ export default function ImageCaptureScreen() {
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA
+      );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     }
     return true;
@@ -30,7 +41,7 @@ export default function ImageCaptureScreen() {
       if (!response.didCancel && !response.errorCode) {
         const newImage = response.assets[0];
         setSelectedImages((prev) => [...prev, newImage.uri]);
-        setIsReadyForMetadata(false); // Wait for "Done Capturing"
+        setIsReadyForMetadata(false); // Wait for Done Capturing
       }
     });
   };
@@ -42,7 +53,7 @@ export default function ImageCaptureScreen() {
         if (!response.didCancel && !response.errorCode) {
           const uris = response.assets.map((asset) => asset.uri);
           setSelectedImages((prev) => [...prev, ...uris]);
-          setIsReadyForMetadata(true);
+          setIsReadyForMetadata(true); // Show metadata form
         }
       }
     );
@@ -61,16 +72,16 @@ export default function ImageCaptureScreen() {
 
     try {
       for (const uri of selectedImages) {
-        await saveImageWithMetadata(uri, metadata);          // Save locally
-        await uploadImageAndMetadata(uri, metadata);         // Save to Firebase
+        await saveImageWithMetadata(uri, metadata); // save locally
+        await uploadImageToFirebase(uri, metadata); // upload to Firebase
       }
 
-      Alert.alert('✅ Success', 'Metadata saved locally and uploaded to cloud.');
+      Alert.alert('✅ Success', 'Metadata saved and uploaded successfully.');
       setSelectedImages([]);
       setIsReadyForMetadata(false);
     } catch (error) {
-      Alert.alert('❌ Error', 'Failed to save/upload metadata.');
-      console.error(error);
+      console.error('Upload error:', error);
+      Alert.alert('❌ Error', 'Failed to upload image or metadata.');
     }
   };
 
@@ -88,7 +99,11 @@ export default function ImageCaptureScreen() {
       </View>
 
       {selectedImages.length > 0 && !isReadyForMetadata && (
-        <Button title="✅ Done Capturing" onPress={() => setIsReadyForMetadata(true)} color="green" />
+        <Button
+          title="✅ Done Capturing"
+          onPress={() => setIsReadyForMetadata(true)}
+          color="green"
+        />
       )}
 
       {isReadyForMetadata && <MetadataForm onSubmit={onSubmitMetadata} />}
